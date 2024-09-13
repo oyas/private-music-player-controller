@@ -1,11 +1,11 @@
 import discord
 from discord.ext.commands import HelpCommand
-import player
+from player import Player
 
 class MyClient(discord.Client):
-    def __init__(self, intents, driver):
+    def __init__(self, intents, player):
         super().__init__(intents=intents)
-        self.driver = driver
+        self.player = player
 
     async def on_ready(self):
         print(f'Logged in as {self.user} (ID: {self.user.id})')
@@ -26,24 +26,24 @@ class MyClient(discord.Client):
                 await message.channel.send('<search string>\tAdd songs.\nskip\tSkip the current song.\nstop\tStop or start.\nhelp\tShow this message.')
                 return
             if m == "skip":
-                player.skip(self.driver)
+                self.player.skip()
                 return
             if m == "stop":
-                player.stop(self.driver)
+                self.player.stop()
                 return
-            player.queue(self.driver, m)
+            self.player.queue(m)
             await message.channel.send('queued ' + m)
 
         print(message, message.content)
 
 def main():
-    driver = player.openYouTubeMusic()
+    player = Player()
 
     intents = discord.Intents(messages=True)
-    client = MyClient(intents=intents, driver=driver)
-    client.run()
+    client = MyClient(intents=intents, player=player)
+    client.run('')
 
-    player.closeYouTubeMusic(driver)
+    player.close()
 
 if __name__ == '__main__':
     main()
