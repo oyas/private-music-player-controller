@@ -1,6 +1,8 @@
 import discord
 from discord.ext.commands import HelpCommand
 from player import Player
+import os
+from dotenv import load_dotenv
 
 class MyClient(discord.Client):
     def __init__(self, intents, player):
@@ -37,11 +39,13 @@ class MyClient(discord.Client):
         print(message, message.content)
 
 def main():
+    load_dotenv()
+
     player = Player()
 
     intents = discord.Intents(messages=True)
     client = MyClient(intents=intents, player=player)
-    client.run('')
+    client.run(os.getenv("DISCORD_TOKEN"))
 
     player.close()
 

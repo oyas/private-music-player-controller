@@ -8,6 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
 import time
+import os
 
 
 class Player():
@@ -81,8 +82,11 @@ class Player():
 
 def openYouTubeMusic():
     options = Options()
-    # options.add_argument("--user-data-dir=/home/user/.config/google-chrome")
-    # options.add_argument("--profile-directory=Default")
+    user_data_dir = os.getenv("USER_DATA_DIR")
+    profile_directory = os.getenv("PROFILE_DIRECTORY")
+    if user_data_dir != "" and profile_directory != "":
+        options.add_argument("--user-data-dir=" + user_data_dir)
+        options.add_argument("--profile-directory=" + profile_directory)
     driver = webdriver.Chrome(options=options)
     driver.get('https://music.youtube.com/')
     return driver
